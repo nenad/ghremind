@@ -9,6 +9,7 @@ import (
 
 const (
 	githubAPI       = "https://api.github.com"
+	githubURL       = "https://github.com/"
 	pullRequestPath = "/repos/%s/%s/pulls"
 )
 
@@ -32,6 +33,7 @@ type (
 
 	// PullRequest keeps necessary data for a GitHub PR
 	PullRequest struct {
+		ID           int       `json:"id"`
 		Title        string    `json:"title"`
 		URL          string    `json:"html_url"`
 		Labels       []Label   `json:"labels"`
@@ -44,6 +46,7 @@ type (
 	Repository struct {
 		Name         string        `json:"name"`
 		Owner        string        `json:"owner"`
+		URL          string        `json:"url"`
 		PullRequests []PullRequest `json:"pull_requests"`
 	}
 )
@@ -84,6 +87,7 @@ func (c *Client) GetRepositoryData(owner, repository string) (*Repository, error
 	}
 
 	repo := &Repository{
+		URL:          githubURL + owner + "/" + repository,
 		Name:         repository,
 		Owner:        owner,
 		PullRequests: pullRequests,
