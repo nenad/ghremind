@@ -39,6 +39,13 @@ type (
 		LastActivity time.Time `json:"updated_at"`
 		Author       Author    `json:"user"`
 	}
+
+	// Repository keeps repository with PRs
+	Repository struct {
+		Name         string        `json:"name"`
+		Owner        string        `json:"owner"`
+		PullRequests []PullRequest `json:"pull_requests"`
+	}
 )
 
 // NewClient provides a new GitHub client
@@ -49,9 +56,9 @@ func NewClient(token string) *Client {
 	}
 }
 
-// GetPullRequests returns all opened pull requests
+// GetRepositoryData returns all opened pull requests
 // for a given owner and repository
-func (c *Client) GetPullRequests(owner, repository string) ([]PullRequest, error) {
+func (c *Client) GetRepositoryData(owner, repository string) (*Repository, error) {
 	path := fmt.Sprintf(pullRequestPath, owner, repository)
 	url := fmt.Sprintf("%s%s", githubAPI, path)
 
@@ -76,5 +83,10 @@ func (c *Client) GetPullRequests(owner, repository string) ([]PullRequest, error
 		return nil, err
 	}
 
-	return pullRequests, nil
+	repo := &Repository{
+		Name:         repository,
+		Owner:        owner,
+		PullRequests: pullRequests,
+	}
+	return repo, nil
 }
