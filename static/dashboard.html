@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Open pull requests</title>
+    <link rel="stylesheet" href="./static/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script defer src="./static/dashboard.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="repositories">
+            <repository v-for="repo in repos" :key="repo.url" v-bind:repo="repo"></repository>
+        </div>
+    </div>
+</body>
+
+</html>
