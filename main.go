@@ -29,26 +29,33 @@ func main() {
 		}
 
 		allRepos := strings.Split(repos, ",")
-		allPRs := make(map[string][]github.PullRequest)
+		result := make([]github.Repository, len(allRepos))
 
 		var wg sync.WaitGroup
-		for _, repo := range allRepos {
-			r, o := repo, owner
+		for i, repo := range allRepos {
+			r, o, i := repo, owner, i
 			wg.Add(1)
-			go func(string, string) {
+			go func(string, string, int) {
 				defer wg.Done()
-				prs, err := client.GetPullRequests(o, r)
+				repoData, err := client.GetRepositoryData(o, r)
 				if err != nil {
 					fmt.Println(w, err)
 				}
-				allPRs[r] = prs
-			}(o, r)
+				result[i] = *repoData
+			}(o, r, i)
 		}
 		wg.Wait()
 
 		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(allPRs)
+		json.NewEncoder(w).Encode(result)
 	})
+
+	http.HandleFunc("/dashboard", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "text/html; charset=utf-8")
+		http.ServeFile(w, r, "./static/dashboard.html")
+	})
+
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
