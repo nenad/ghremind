@@ -33,7 +33,7 @@ type (
 
 	// PullRequest keeps necessary data for a GitHub PR
 	PullRequest struct {
-		ID           int       `json:"id"`
+		Number       int       `json:"number"`
 		Title        string    `json:"title"`
 		URL          string    `json:"html_url"`
 		Labels       []Label   `json:"labels"`
