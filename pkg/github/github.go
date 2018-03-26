@@ -78,6 +78,7 @@ func (c *Client) GetRepositoryData(owner, repository string) (*Repository, error
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	var pullRequests []PullRequest
 	err = json.NewDecoder(resp.Body).Decode(&pullRequests)
