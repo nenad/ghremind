@@ -6,8 +6,10 @@ Vue.component("repository", {
     props: ["repo"],
     template: `
     <div class="repo">
-        <span class="repo-owner">{{ repo.owner }}/</span>
-        <span class="repo-name">{{ repo.name }}</span>
+        <a v-bind:href="repo.url">
+            <span class="repo-owner">{{ repo.owner }}/</span>
+            <span class="repo-name">{{ repo.name }}</span>
+        </a>
         <div class="repo-prs">
             <pullrequest v-for="pr in repo.pull_requests" :key="pr.url" v-bind:pr="pr"></pullrequest>
         </div>
@@ -18,8 +20,9 @@ Vue.component("repository", {
 Vue.component("pullrequest", {
     props: ["pr"],
     template: `
-    <div class="pullrequest">
-        <span class="pr-title"> >>> {{ pr.title }}/</span>
+    <div class="pr">
+        <span class="pr-id"><a v-bind:href="pr.html_url">#{{ pr.number }}</a></span>
+        <span class="pr-title">{{ pr.title }}/</span>
         <img class="pr-avatar" v-bind:src="pr.user.avatar_url">
     </div>
     `
