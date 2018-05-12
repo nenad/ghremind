@@ -12,6 +12,7 @@ type (
 	// Comment contains information about a comment made on the pull request
 	Comment struct {
 		Author    Author
+		URL       string
 		UpdatedAt githubv4.DateTime
 		BodyText  string
 	}
