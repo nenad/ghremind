@@ -12,6 +12,18 @@ body {
 
 .pr {
     padding-left: 5%;
+    height: 64px;
+    display: flex;
+}
+
+.pr-title {}
+
+.pr-comment {
+    width: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
 }
 
 .pr-avatar {

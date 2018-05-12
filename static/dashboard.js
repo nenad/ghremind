@@ -21,9 +21,25 @@ Vue.component("pullrequest", {
     props: ["pr"],
     template: `
     <div class="pr">
-        <span class="pr-id"><a v-bind:href="pr.URL">#{{ pr.Number }}</a></span>
-        <span class="pr-title">{{ pr.Title }}/</span>
-        <img class="pr-avatar" v-bind:src="pr.Author.AvatarURL">
+        <div class="pr-details">
+            <img class="pr-avatar" v-bind:src="pr.Author.AvatarURL">
+            <span class="pr-id"><a v-bind:href="pr.URL">#{{ pr.Number }}</a></span>
+            <span class="pr-title">{{ pr.Title }}</span>
+            <div class="pr-stats">
+                <span class="pr-difficulty">EASY</span>
+                <div class="pr-lines">
+                    <span class="pr-additions">+{{ pr.Additions }}</span>
+                    <span class="pr-deletions">-{{ pr.Deletions }}</span>
+                    <span class="pr-files">{{ pr.ChangedFiles }}</span>
+                </div>
+            </div>
+            <div class="pr-date">
+                5 hours
+            </div>
+        </div>
+        <div class="pr-comments">
+            <div class="pr-comment" v-for="c in pr.Comments.Nodes" :key="c.URL">{{ c.BodyText }}</span>
+        </div>
     </div>
     `
 });
