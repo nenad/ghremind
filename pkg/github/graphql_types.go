@@ -5,7 +5,8 @@ import "github.com/shurcooL/githubv4"
 type (
 	// Author contains information about a GitHub user
 	Author struct {
-		Login string
+		Login     string
+		AvatarURL string
 	}
 
 	// Comment contains information about a comment made on the pull request
@@ -20,6 +21,7 @@ type (
 		Title        string
 		URL          string
 		Number       int
+		Author       Author
 		ChangedFiles int
 		Additions    int
 		Deletions    int
@@ -37,6 +39,7 @@ type (
 
 	// Repository contains informationa about a GitHub repository
 	Repository struct {
+		Owner        Author
 		Name         string
 		PullRequests struct {
 			Nodes []PullRequest
