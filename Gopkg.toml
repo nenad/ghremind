@@ -1,0 +1,11 @@
+[prune]
+  go-tests = true
+  unused-packages = true
+
+[[constraint]]
+  name = "github.com/shurcooL/githubv4"
+  branch = "master"
+
+[[constraint]]
+  name = "golang.org/x/oauth2"
+  branch = "master"
