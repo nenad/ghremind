@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -17,37 +18,32 @@ func main() {
 	if token == "" {
 		log.Println("Missing GITHUB_TOKEN, can only serve public repositories")
 	}
-	client := github.NewClient(token)
+
+	client := github.New(context.Background(), token)
 
 	http.HandleFunc("/pullrequests", func(w http.ResponseWriter, r *http.Request) {
-		owner := r.URL.Query().Get("owner")
-		repos := r.URL.Query().Get("repos")
+		ownerParam := r.URL.Query().Get("owner")
+		reposParam := r.URL.Query().Get("repos")
 
-		if owner == "" || repos == "" {
+		if ownerParam == "" || reposParam == "" {
 			fmt.Fprintln(w, "Missing owner or repos query parmaeter")
 			return
 		}
 
-		allRepos := strings.Split(repos, ",")
-		result := make([]github.Repository, len(allRepos))
-
-		var wg sync.WaitGroup
-		for i, repo := range allRepos {
-			r, o, i := repo, owner, i
-			wg.Add(1)
-			go func(string, string, int) {
-				defer wg.Done()
-				repoData, err := client.GetRepositoryData(o, r)
-				if err != nil {
-					fmt.Println(w, err)
-				}
-				result[i] = *repoData
-			}(o, r, i)
-		}
-		wg.Wait()
+		repos := strings.Split(reposParam, ",")
 
 		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(result)
+		rr := make([]github.RepositoryData, len(repos))
+		wg := sync.WaitGroup{}
+		for k, r := range repos {
+			wg.Add(1)
+			go func(owner, repo string, index int) {
+				defer wg.Done()
+				rr[index] = client.RepositoryData(owner, repo)
+			}(ownerParam, r, k)
+		}
+		wg.Wait()
+		json.NewEncoder(w).Encode(rr)
 	})
 
 	http.HandleFunc("/dashboard", func(w http.ResponseWriter, r *http.Request) {
