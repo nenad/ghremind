@@ -8,13 +8,14 @@
     <title>Open pull requests</title>
     <link rel="stylesheet" href="./static/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script defer src="./static/dashboard.js"></script>
 </head>
 
 <body>
     <div id="app">
         <div class="repositories">
-            <repository v-for="repo in repos" :key="repo.Name" v-bind:repo="repo"></repository>
+            <repository v-for="repo in repos" :key="repo.Name" v-if="repo.PullRequests.Nodes.length" v-bind:repo="repo"></repository>
         </div>
     </div>
 </body>
