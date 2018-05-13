@@ -44,7 +44,7 @@ type (
 		Name         string
 		PullRequests struct {
 			Nodes []PullRequest
-		} `graphql:"pullRequests(first: 10, orderBy: {field: CREATED_AT, direction: DESC})"`
+		} `graphql:"pullRequests(first: 2, states:OPEN, orderBy: {field: CREATED_AT, direction: DESC})"`
 	}
 
 	// Review contains information about a code review
