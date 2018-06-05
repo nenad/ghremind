@@ -1,0 +1,12 @@
+version: '3'
+services:
+  ghremind-backend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    volumes:
+      - .:/go/src/github.com/nenadstojanovikj/ghremind
+    ports:
+    - '8080:8080'
