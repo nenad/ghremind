@@ -25,13 +25,16 @@ func New(ctx context.Context, token string) *Client {
 }
 
 // RepositoryData returns data about repository
-func (c *Client) RepositoryData(owner, name string) RepositoryData {
+func (c *Client) RepositoryData(owner, name string) (*RepositoryData, error) {
 	var data RepositoryData
 	vars := map[string]interface{}{
 		"name":  githubv4.String(name),
 		"owner": githubv4.String(owner),
 	}
 
-	c.graphClient.Query(c.context, &data, vars)
-	return data
+	if err := c.graphClient.Query(c.context, &data, vars); err != nil {
+		return nil, err
+	}
+
+	return &data, nil
 }

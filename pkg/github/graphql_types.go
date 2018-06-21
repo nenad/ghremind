@@ -1,6 +1,10 @@
 package github
 
-import "github.com/shurcooL/githubv4"
+import (
+	"time"
+
+	"github.com/shurcooL/githubv4"
+)
 
 type (
 	// Author contains information about a GitHub user
@@ -17,6 +21,25 @@ type (
 		BodyText  string
 	}
 
+	// PullRequestCommit contains information about a commit which belongs to the pull request
+	PullRequestCommit struct {
+		Commit Commit
+	}
+
+	StatusContext struct {
+		Context string
+		State string
+	}
+
+	// Commit contains information about a commit from the version control
+	Commit struct {
+		PushedDate time.Time
+		Status     struct {
+			State string
+			Contexts []StatusContext
+		}
+	}
+
 	// PullRequest contains information about a pull request
 	PullRequest struct {
 		Title        string
@@ -30,7 +53,10 @@ type (
 		Closed       bool
 		CreatedAt    githubv4.DateTime
 		UpdatedAt    githubv4.DateTime
-		Reviews      struct {
+		Commits      struct {
+			Nodes []PullRequestCommit
+		} `graphql:"commits(last:1)"`
+		Reviews struct {
 			Nodes []Review
 		} `graphql:"reviews(last:5)"`
 		Comments struct {
@@ -44,7 +70,7 @@ type (
 		Name         string
 		PullRequests struct {
 			Nodes []PullRequest
-		} `graphql:"pullRequests(first: 2, states:OPEN, orderBy: {field: CREATED_AT, direction: DESC})"`
+		} `graphql:"pullRequests(first: 10, states:OPEN, orderBy: {field: CREATED_AT, direction: DESC})"`
 	}
 
 	// Review contains information about a code review

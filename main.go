@@ -39,7 +39,12 @@ func main() {
 			wg.Add(1)
 			go func(owner, repo string, index int) {
 				defer wg.Done()
-				rr[index] = client.RepositoryData(owner, repo)
+				data, err := client.RepositoryData(owner, repo)
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+				rr[index] = *data
 			}(ownerParam, r, k)
 		}
 		wg.Wait()
